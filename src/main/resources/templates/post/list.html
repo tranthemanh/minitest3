@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="/layout :: head">
+    <title>List Post</title>
+</head>
+<body>
+<h3>Posts</h3>
+<p>
+    <a th:href="@{/posts/create}">
+        Add new post
+    </a>
+</p>
+<p>
+    <a th:href="@{/categorys}">
+        Categorys
+    </a>
+</p>
+<!--<div style="margin-bottom: 10px; margin-left: 110px">-->
+<!--    <form th:action="@{/posts}" method="get">-->
+<!--        <label><input type="text" name="search" th:value="${search}"></label>-->
+<!--        <button type="submit" class="btn btn-primary">Search</button>-->
+<!--    </form>-->
+<!--</div>-->
+<div class="notify">
+    <div th:if="${message}">
+        <span th:text="${message}"></span>
+    </div>
+</div>
+
+<h4>Search Results (Exact Match)</h4>
+<table id="posts">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Description</th>
+        <th>Image </th>
+        <th>Category</th>
+        <th>Update</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p,pStatus : ${posts}">
+        <td th:text="${pStatus.count}"></td>
+        <td th:text="${p.getTitle()}"></td>
+        <td th:text="${p.getContent()}"></td>
+        <td th:text="${p.getDescription()}"></td>
+        <td><img width="100" height="100" th:src="@{'/i/' + ${p.image}}"></td>
+        <td th:if="${p.getCategory() == null}">Khong co</td>
+        <td th:unless="${p.getCategory() == null}">
+            <p th:text="${p.getCategory().getName()}"></p>
+        </td>
+        <td><a th:href="@{/posts/update/{id}(id=${p.getId()})}">update</a></td>
+        <td><a th:href="@{/posts/delete/{id}(id=${p.getId()})}">delete</a></td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <a class="btn btn-primary" th:if="${posts.hasPrevious()}"
+       th:href="@{'/posts'(page=${posts.number - 1})}">Previous</a>
+    <span th:text="${posts.number + 1}"></span> | <span th:text="${posts.totalPages}"></span>
+    <a class="btn btn-primary" th:if="${posts.hasNext()}"
+       th:href="@{'/posts'(page=${posts.number + 1})}">Next</a>
+</div>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
